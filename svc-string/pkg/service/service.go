@@ -1,4 +1,4 @@
-package main
+package service
 
 import (
 	"errors"
@@ -9,6 +9,11 @@ import (
 type StringService interface {
 	Uppercase(string) (string, error)
 	Count(string) int
+}
+
+// NewStringService returns a naïve, stateless implementation of StringService.
+func NewStringService() StringService {
+	return stringService{}
 }
 
 type stringService struct{}

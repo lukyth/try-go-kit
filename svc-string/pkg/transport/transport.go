@@ -1,4 +1,4 @@
-package main
+package transport
 
 import (
 	"context"
@@ -6,9 +6,12 @@ import (
 	"net/http"
 
 	"github.com/go-kit/kit/endpoint"
+
+	"github.com/lukyth/try-go-kit/svc-string/pkg/service"
 )
 
-func makeUppercaseEndpoint(svc StringService) endpoint.Endpoint {
+// MakeUppercaseEndpoint constructs an Uppercase endpoint wrapping the service.
+func MakeUppercaseEndpoint(svc service.StringService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(uppercaseRequest)
 		v, err := svc.Uppercase(req.S)
@@ -19,7 +22,8 @@ func makeUppercaseEndpoint(svc StringService) endpoint.Endpoint {
 	}
 }
 
-func makeCountEndpoint(svc StringService) endpoint.Endpoint {
+// MakeCountEndpoint constructs a Count endpoint wrapping the service.
+func MakeCountEndpoint(svc service.StringService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(countRequest)
 		v := svc.Count(req.S)
@@ -27,7 +31,8 @@ func makeCountEndpoint(svc StringService) endpoint.Endpoint {
 	}
 }
 
-func decodeUppercaseRequest(_ context.Context, r *http.Request) (interface{}, error) {
+// DecodeUppercaseRequest decodes a JSON-encoded uppercase request from the HTTP request body.
+func DecodeUppercaseRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request uppercaseRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
@@ -35,7 +40,8 @@ func decodeUppercaseRequest(_ context.Context, r *http.Request) (interface{}, er
 	return request, nil
 }
 
-func decodeCountRequest(_ context.Context, r *http.Request) (interface{}, error) {
+// DecodeCountRequest decodes a JSON-encoded count request from the HTTP request body.
+func DecodeCountRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request countRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
@@ -43,7 +49,8 @@ func decodeCountRequest(_ context.Context, r *http.Request) (interface{}, error)
 	return request, nil
 }
 
-func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+// EncodeResponse encodes the response as JSON to the response writer.
+func EncodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
 	return json.NewEncoder(w).Encode(response)
 }
 

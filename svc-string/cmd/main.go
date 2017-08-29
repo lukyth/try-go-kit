@@ -10,6 +10,10 @@ import (
 	"github.com/go-kit/kit/log"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	httptransport "github.com/go-kit/kit/transport/http"
+
+	"github.com/lukyth/try-go-kit/svc-string/pkg/service"
+	servicemiddleware "github.com/lukyth/try-go-kit/svc-string/pkg/service/middleware"
+	"github.com/lukyth/try-go-kit/svc-string/pkg/transport"
 )
 
 func main() {
@@ -35,21 +39,21 @@ func main() {
 		Help:      "The result of each count method.",
 	}, []string{}) // no fields here
 
-	var svc StringService
-	svc = stringService{}
-	svc = loggingMiddleware{logger, svc}
-	svc = instrumentingMiddleware{requestCount, requestLatency, countResult, svc}
+	var svc service.StringService
+	svc = service.NewStringService()
+	svc = servicemiddleware.LoggingMiddleware(logger)(svc)
+	svc = servicemiddleware.InstrumentingMiddleware(requestCount, requestLatency, countResult)(svc)
 
 	uppercaseHandler := httptransport.NewServer(
-		makeUppercaseEndpoint(svc),
-		decodeUppercaseRequest,
-		encodeResponse,
+		transport.MakeUppercaseEndpoint(svc),
+		transport.DecodeUppercaseRequest,
+		transport.EncodeResponse,
 	)
 
 	countHandler := httptransport.NewServer(
-		makeCountEndpoint(svc),
-		decodeCountRequest,
-		encodeResponse,
+		transport.MakeCountEndpoint(svc),
+		transport.DecodeCountRequest,
+		transport.EncodeResponse,
 	)
 
 	http.Handle("/uppercase", uppercaseHandler)
