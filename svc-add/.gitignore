@@ -1,3 +1,2 @@
 vendor/
-cmd/addsvc/addsvc
-cmd/addcli/addcli
+cmd/svc-add/svc-add

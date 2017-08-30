@@ -8,9 +8,9 @@ dep ensure
 ## Usage
 ### Server
 ```bash
-cd cmd/addsvc
+cd cmd/svc-add
 go build
-./addsvc
+./svc-add
 ```
 ```
 curl -XPOST -d'{"a":1, "b":2}' localhost:8081/sum
