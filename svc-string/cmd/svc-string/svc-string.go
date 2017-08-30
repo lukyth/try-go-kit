@@ -13,7 +13,6 @@ import (
 
 	"github.com/lukyth/try-go-kit/svc-string/pkg/endpoint"
 	"github.com/lukyth/try-go-kit/svc-string/pkg/service"
-	servicemiddleware "github.com/lukyth/try-go-kit/svc-string/pkg/service/middleware"
 	"github.com/lukyth/try-go-kit/svc-string/pkg/transport"
 )
 
@@ -40,10 +39,7 @@ func main() {
 		Help:      "The result of each count method.",
 	}, []string{}) // no fields here
 
-	var svc service.StringService
-	svc = service.NewStringService()
-	svc = servicemiddleware.LoggingMiddleware(logger)(svc)
-	svc = servicemiddleware.InstrumentingMiddleware(requestCount, requestLatency, countResult)(svc)
+	svc := service.New(logger, requestCount, requestLatency, countResult)
 
 	uppercaseHandler := httptransport.NewServer(
 		endpoint.MakeUppercaseEndpoint(svc),

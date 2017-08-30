@@ -3,12 +3,26 @@ package service
 import (
 	"errors"
 	"strings"
+
+	"github.com/go-kit/kit/log"
+	"github.com/go-kit/kit/metrics"
 )
 
 // StringService provides operations on strings.
 type StringService interface {
 	Uppercase(string) (string, error)
 	Count(string) int
+}
+
+// New returns a basic Service with all of the expected middlewares wired in.
+func New(logger log.Logger, requestCount metrics.Counter, requestLatency, countResult metrics.Histogram) StringService {
+	var svc StringService
+	{
+		svc = NewStringService()
+		svc = LoggingMiddleware(logger)(svc)
+		svc = InstrumentingMiddleware(requestCount, requestLatency, countResult)(svc)
+	}
+	return svc
 }
 
 // NewStringService returns a naïve, stateless implementation of StringService.

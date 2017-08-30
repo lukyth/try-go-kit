@@ -1,24 +1,22 @@
-package middleware
+package service
 
 import (
 	"time"
 
 	"github.com/go-kit/kit/log"
-
-	"github.com/lukyth/try-go-kit/svc-string/pkg/service"
 )
 
 // LoggingMiddleware takes a logger as a dependency
 // and returns a ServiceMiddleware.
 func LoggingMiddleware(logger log.Logger) Middleware {
-	return func(next service.StringService) service.StringService {
+	return func(next StringService) StringService {
 		return loggingMiddleware{logger, next}
 	}
 }
 
 type loggingMiddleware struct {
 	logger log.Logger
-	next   service.StringService
+	next   StringService
 }
 
 func (mw loggingMiddleware) Uppercase(s string) (output string, err error) {
