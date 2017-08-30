@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/metrics"
 )
 
 // StringService provides operations on strings.
@@ -15,12 +14,12 @@ type StringService interface {
 }
 
 // New returns a basic Service with all of the expected middlewares wired in.
-func New(logger log.Logger, requestCount metrics.Counter, requestLatency, countResult metrics.Histogram) StringService {
+func New(logger log.Logger) StringService {
 	var svc StringService
 	{
 		svc = NewStringService()
 		svc = LoggingMiddleware(logger)(svc)
-		svc = InstrumentingMiddleware(requestCount, requestLatency, countResult)(svc)
+		svc = InstrumentingMiddleware()(svc)
 	}
 	return svc
 }

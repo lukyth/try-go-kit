@@ -4,13 +4,36 @@ import (
 	"fmt"
 	"time"
 
+	stdprometheus "github.com/prometheus/client_golang/prometheus"
+
 	"github.com/go-kit/kit/metrics"
+	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 )
 
 // InstrumentingMiddleware returns a service middleware that count the number of jobs
 // processed, record the duration of requests after they’ve finished and track the number
 // of in-flight operations.
-func InstrumentingMiddleware(requestCount metrics.Counter, requestLatency, countResult metrics.Histogram) Middleware {
+func InstrumentingMiddleware() Middleware {
+	fieldKeys := []string{"method", "error"}
+	requestCount := kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
+		Namespace: "my_group",
+		Subsystem: "string_service",
+		Name:      "request_count",
+		Help:      "Number of requests received.",
+	}, fieldKeys)
+	requestLatency := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+		Namespace: "my_group",
+		Subsystem: "string_service",
+		Name:      "request_latency_microseconds",
+		Help:      "Total duration of requests in microseconds.",
+	}, fieldKeys)
+	countResult := kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+		Namespace: "my_group",
+		Subsystem: "string_service",
+		Name:      "count_result",
+		Help:      "The result of each count method.",
+	}, []string{}) // no fields here
+
 	return func(next StringService) StringService {
 		return instrumentingMiddleware{
 			requestCount:   requestCount,
