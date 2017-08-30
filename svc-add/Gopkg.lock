@@ -39,12 +39,6 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/hashicorp/logutils"
-  packages = ["."]
-  revision = "0dc08b1671f34c4250ce212759ebd880f743d883"
-
-[[projects]]
-  branch = "master"
   name = "github.com/juju/ratelimit"
   packages = ["."]
   revision = "5b9ff866471762aa2ab2dced63c9fb6f53921342"
@@ -66,12 +60,6 @@
   packages = ["pkg/group"]
   revision = "fca58330910eb7fe6267788eddf879b1d6811176"
   version = "v0.2.2"
-
-[[projects]]
-  name = "github.com/pact-foundation/pact-go"
-  packages = ["dsl","types"]
-  revision = "e5ab27bf2c64016e153ac8a5237aa4f34d42587a"
-  version = "v0.0.9"
 
 [[projects]]
   name = "github.com/prometheus/client_golang"
@@ -112,6 +100,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "045b57d50fa49aeb4484246db7dfcc9a6f8dc8ff89758540252d2070ad27cfcc"
+  inputs-digest = "acaa7a39574d204e78b4ed0dabed4a6c975d4f104299f14ca9e8f6563ebf8c62"
   solver-name = "gps-cdcl"
   solver-version = 1

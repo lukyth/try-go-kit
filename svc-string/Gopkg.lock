@@ -33,6 +33,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/hashicorp/logutils"
+  packages = ["."]
+  revision = "0dc08b1671f34c4250ce212759ebd880f743d883"
+
+[[projects]]
+  branch = "master"
   name = "github.com/kr/logfmt"
   packages = ["."]
   revision = "b84e30acd515aadc4b783ad4ff83aff3299bdfe0"
@@ -42,6 +48,12 @@
   packages = ["pbutil"]
   revision = "3247c84500bff8d9fb6d579d800f20b3e091582c"
   version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/pact-foundation/pact-go"
+  packages = ["dsl","types"]
+  revision = "e5ab27bf2c64016e153ac8a5237aa4f34d42587a"
+  version = "v0.0.9"
 
 [[projects]]
   name = "github.com/prometheus/client_golang"
@@ -70,6 +82,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d58f23ac0946bef3de36c217a1095775e42251bc03a83e7b3dd206d33b8887d3"
+  inputs-digest = "3d92ca19a265289f4a62f8dadb5a1af98fb0d00ef67e9ca907fc9fd726036088"
   solver-name = "gps-cdcl"
   solver-version = 1

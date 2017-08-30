@@ -10,20 +10,20 @@ import (
 	"github.com/pact-foundation/pact-go/dsl"
 )
 
-func TestPactStringsvcUppercase(t *testing.T) {
+func TestPactSvcStringUppercase(t *testing.T) {
 	if os.Getenv("WRITE_PACTS") == "" {
 		t.Skip("skipping Pact contracts; set WRITE_PACTS environment variable to enable")
 	}
 
 	pact := dsl.Pact{
 		Port:     6666,
-		Consumer: "addsvc",
-		Provider: "stringsvc",
+		Consumer: "svc-add",
+		Provider: "svc-string",
 	}
 	defer pact.Teardown()
 
 	pact.AddInteraction().
-		UponReceiving("stringsvc uppercase").
+		UponReceiving("svc-string uppercase").
 		WithRequest(dsl.Request{
 			Headers: map[string]string{"Content-Type": "application/json; charset=utf-8"},
 			Method:  "POST",
