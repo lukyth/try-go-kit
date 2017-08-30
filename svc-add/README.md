@@ -12,13 +12,7 @@ cd cmd/addsvc
 go build
 ./addsvc
 ```
-### Client
-```bash
-cd cmd/addcli
-go build
-./addcli
 ```
-```bash
-./addcli -http-addr=:8081 -method=concat 1 2
-./addcli -http-addr=:8081 -method=sum 1 2
+curl -XPOST -d'{"a":1, "b":2}' localhost:8081/sum
+curl -XPOST -d'{"a":"1", "b":"2"}' localhost:8081/concat
 ```
