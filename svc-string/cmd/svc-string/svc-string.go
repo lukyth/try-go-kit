@@ -11,6 +11,7 @@ import (
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	httptransport "github.com/go-kit/kit/transport/http"
 
+	"github.com/lukyth/try-go-kit/svc-string/pkg/endpoint"
 	"github.com/lukyth/try-go-kit/svc-string/pkg/service"
 	servicemiddleware "github.com/lukyth/try-go-kit/svc-string/pkg/service/middleware"
 	"github.com/lukyth/try-go-kit/svc-string/pkg/transport"
@@ -45,13 +46,13 @@ func main() {
 	svc = servicemiddleware.InstrumentingMiddleware(requestCount, requestLatency, countResult)(svc)
 
 	uppercaseHandler := httptransport.NewServer(
-		transport.MakeUppercaseEndpoint(svc),
+		endpoint.MakeUppercaseEndpoint(svc),
 		transport.DecodeUppercaseRequest,
 		transport.EncodeResponse,
 	)
 
 	countHandler := httptransport.NewServer(
-		transport.MakeCountEndpoint(svc),
+		endpoint.MakeCountEndpoint(svc),
 		transport.DecodeCountRequest,
 		transport.EncodeResponse,
 	)
