@@ -9,7 +9,7 @@ dep ensure
 ```bash
 cd cmd
 go build
-./cmd
+./svc-string
 ```
 ```bash
 curl -XPOST -d'{"s":"hello, world"}' localhost:8080/uppercase
