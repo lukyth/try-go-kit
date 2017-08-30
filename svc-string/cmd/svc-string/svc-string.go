@@ -5,11 +5,9 @@ import (
 	"os"
 
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/go-kit/kit/log"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
-	httptransport "github.com/go-kit/kit/transport/http"
 
 	"github.com/lukyth/try-go-kit/svc-string/pkg/endpoint"
 	"github.com/lukyth/try-go-kit/svc-string/pkg/service"
@@ -41,22 +39,8 @@ func main() {
 
 	svc := service.New(logger, requestCount, requestLatency, countResult)
 	endpoints := endpoint.New(svc)
+	httpHandler := transport.NewHTTPHandler(endpoints)
 
-	uppercaseHandler := httptransport.NewServer(
-		endpoints.UppercaseEndpoint,
-		transport.DecodeUppercaseRequest,
-		transport.EncodeResponse,
-	)
-
-	countHandler := httptransport.NewServer(
-		endpoints.CountEndpoint,
-		transport.DecodeCountRequest,
-		transport.EncodeResponse,
-	)
-
-	http.Handle("/uppercase", uppercaseHandler)
-	http.Handle("/count", countHandler)
-	http.Handle("/metrics", promhttp.Handler())
 	logger.Log("msg", "HTTP", "addr", ":8080")
-	logger.Log("err", http.ListenAndServe(":8080", nil))
+	logger.Log("err", http.ListenAndServe(":8080", httpHandler))
 }
