@@ -40,15 +40,16 @@ func main() {
 	}, []string{}) // no fields here
 
 	svc := service.New(logger, requestCount, requestLatency, countResult)
+	endpoints := endpoint.New(svc)
 
 	uppercaseHandler := httptransport.NewServer(
-		endpoint.MakeUppercaseEndpoint(svc),
+		endpoints.UppercaseEndpoint,
 		transport.DecodeUppercaseRequest,
 		transport.EncodeResponse,
 	)
 
 	countHandler := httptransport.NewServer(
-		endpoint.MakeCountEndpoint(svc),
+		endpoints.CountEndpoint,
 		transport.DecodeCountRequest,
 		transport.EncodeResponse,
 	)
