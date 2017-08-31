@@ -11,12 +11,9 @@ import (
 	"text/tabwriter"
 
 	"github.com/oklog/oklog/pkg/group"
-	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/metrics"
-	"github.com/go-kit/kit/metrics/prometheus"
 
 	"github.com/lukyth/try-go-kit/svc-add/pkg/endpoint"
 	"github.com/lukyth/try-go-kit/svc-add/pkg/service"
@@ -43,16 +40,6 @@ func main() {
 		logger = log.With(logger, "caller", log.DefaultCaller)
 	}
 
-	var duration metrics.Histogram
-	{
-		// Endpoint-level metrics.
-		duration = prometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
-			Namespace: "example",
-			Subsystem: "svc_add",
-			Name:      "request_duration_seconds",
-			Help:      "Request duration in seconds.",
-		}, []string{"method", "success"})
-	}
 	http.DefaultServeMux.Handle("/metrics", promhttp.Handler())
 
 	// Build the layers of the service "onion" from the inside out. First, the
@@ -63,7 +50,7 @@ func main() {
 	// them to ports or anything yet; we'll do that next.
 	var (
 		service     = service.New(logger)
-		endpoints   = endpoint.New(service, logger, duration)
+		endpoints   = endpoint.New(service, logger)
 		httpHandler = transport.NewHTTPHandler(endpoints, logger)
 	)
 

@@ -9,7 +9,6 @@ import (
 	"github.com/go-kit/kit/circuitbreaker"
 	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/metrics"
 	"github.com/go-kit/kit/ratelimit"
 
 	"github.com/lukyth/try-go-kit/svc-add/pkg/service"
@@ -25,7 +24,8 @@ type Set struct {
 
 // New returns a Set that wraps the provided server, and wires in all of the
 // expected endpoint middlewares via the various parameters.
-func New(svc service.Service, logger log.Logger, duration metrics.Histogram) Set {
+func New(svc service.Service, logger log.Logger) Set {
+	duration := GenerateInstrumentingMetric()
 	var sumEndpoint endpoint.Endpoint
 	{
 		sumEndpoint = MakeSumEndpoint(svc)
