@@ -17,7 +17,7 @@ import (
 func GenerateInstrumentingMetric() metrics.Histogram {
 	// Endpoint-level metrics.
 	duration := prometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
-		Namespace: "example",
+		Namespace: "try_go_kit",
 		Subsystem: "svc_add",
 		Name:      "request_duration_seconds",
 		Help:      "Request duration in seconds.",

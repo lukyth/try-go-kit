@@ -21,9 +21,7 @@ import (
 )
 
 func main() {
-	// Define our flags. Your service probably won't need to bind listeners for
-	// *all* supported transports, or support both Zipkin and LightStep, and so
-	// on, but we do it here for demonstration purposes.
+	// Define our flags.
 	fs := flag.NewFlagSet("svc-add", flag.ExitOnError)
 	var (
 		httpAddr  = fs.String("http-addr", ":8081", "HTTP listen address")
@@ -42,12 +40,6 @@ func main() {
 
 	http.DefaultServeMux.Handle("/metrics", promhttp.Handler())
 
-	// Build the layers of the service "onion" from the inside out. First, the
-	// business logic service; then, the set of endpoints that wrap the service;
-	// and finally, a series of concrete transport adapters. The adapters, like
-	// the HTTP handler or the gRPC server, are the bridge between Go kit and
-	// the interfaces that the transports expect. Note that we're not binding
-	// them to ports or anything yet; we'll do that next.
 	var (
 		service     = service.New(logger)
 		endpoints   = endpoint.New(service, logger)

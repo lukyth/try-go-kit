@@ -49,13 +49,13 @@ func InstrumentingMiddleware() Middleware {
 	{
 		// Business-level metrics.
 		ints = prometheus.NewCounterFrom(stdprometheus.CounterOpts{
-			Namespace: "example",
+			Namespace: "try_go_kit",
 			Subsystem: "svc_add",
 			Name:      "integers_summed",
 			Help:      "Total count of integers summed via the Sum method.",
 		}, []string{})
 		chars = prometheus.NewCounterFrom(stdprometheus.CounterOpts{
-			Namespace: "example",
+			Namespace: "try_go_kit",
 			Subsystem: "svc_add",
 			Name:      "characters_concatenated",
 			Help:      "Total count of characters concatenated via the Concat method.",
