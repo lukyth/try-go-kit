@@ -43,24 +43,6 @@ func main() {
 		logger = log.With(logger, "caller", log.DefaultCaller)
 	}
 
-	// Create the (sparse) metrics we'll use in the service. They, too, are
-	// dependencies that we pass to components that use them.
-	var ints, chars metrics.Counter
-	{
-		// Business-level metrics.
-		ints = prometheus.NewCounterFrom(stdprometheus.CounterOpts{
-			Namespace: "example",
-			Subsystem: "svc_add",
-			Name:      "integers_summed",
-			Help:      "Total count of integers summed via the Sum method.",
-		}, []string{})
-		chars = prometheus.NewCounterFrom(stdprometheus.CounterOpts{
-			Namespace: "example",
-			Subsystem: "svc_add",
-			Name:      "characters_concatenated",
-			Help:      "Total count of characters concatenated via the Concat method.",
-		}, []string{})
-	}
 	var duration metrics.Histogram
 	{
 		// Endpoint-level metrics.
@@ -80,7 +62,7 @@ func main() {
 	// the interfaces that the transports expect. Note that we're not binding
 	// them to ports or anything yet; we'll do that next.
 	var (
-		service     = service.New(logger, ints, chars)
+		service     = service.New(logger)
 		endpoints   = endpoint.New(service, logger, duration)
 		httpHandler = transport.NewHTTPHandler(endpoints, logger)
 	)

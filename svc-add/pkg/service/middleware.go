@@ -3,8 +3,11 @@ package service
 import (
 	"context"
 
+	stdprometheus "github.com/prometheus/client_golang/prometheus"
+
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/metrics"
+	"github.com/go-kit/kit/metrics/prometheus"
 )
 
 // Middleware describes a service (as opposed to endpoint) middleware.
@@ -40,7 +43,25 @@ func (mw loggingMiddleware) Concat(ctx context.Context, a, b string) (v string, 
 // InstrumentingMiddleware returns a service middleware that instruments
 // the number of integers summed and characters concatenated over the lifetime of
 // the service.
-func InstrumentingMiddleware(ints, chars metrics.Counter) Middleware {
+func InstrumentingMiddleware() Middleware {
+	// Create the (sparse) metrics we'll use in the service.
+	var ints, chars metrics.Counter
+	{
+		// Business-level metrics.
+		ints = prometheus.NewCounterFrom(stdprometheus.CounterOpts{
+			Namespace: "example",
+			Subsystem: "svc_add",
+			Name:      "integers_summed",
+			Help:      "Total count of integers summed via the Sum method.",
+		}, []string{})
+		chars = prometheus.NewCounterFrom(stdprometheus.CounterOpts{
+			Namespace: "example",
+			Subsystem: "svc_add",
+			Name:      "characters_concatenated",
+			Help:      "Total count of characters concatenated via the Concat method.",
+		}, []string{})
+	}
+
 	return func(next Service) Service {
 		return instrumentingMiddleware{
 			ints:  ints,
