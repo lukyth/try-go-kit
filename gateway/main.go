@@ -14,16 +14,19 @@ func main() {
 	logger := log.NewLogfmtLogger(os.Stderr)
 
 	r := mux.NewRouter()
-	// Routes consist of a path and a handler function.
-	// r.HandleFunc("/add", addHandler)
-	r.HandleFunc("/string", stringHandler)
+	r.HandleFunc("/{serviceName}/{func}", serviceHandler)
 
 	logger.Log("msg", "HTTP", "addr", ":8000")
 	logger.Log("err", http.ListenAndServe(":8000", r))
 }
 
-func stringHandler(w http.ResponseWriter, r *http.Request) {
-	url := "http://localhost:8080/count"
+func serviceHandler(w http.ResponseWriter, r *http.Request) {
+	m := map[string]string{
+		"add":    "8081",
+		"string": "8080",
+	}
+	vars := mux.Vars(r)
+	url := "http://localhost:" + m[vars["serviceName"]] + "/" + vars["func"]
 
 	req, err := http.NewRequest("POST", url, r.Body)
 
