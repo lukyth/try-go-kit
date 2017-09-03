@@ -21,12 +21,8 @@ func main() {
 }
 
 func serviceHandler(w http.ResponseWriter, r *http.Request) {
-	m := map[string]string{
-		"add":    "8081",
-		"string": "8080",
-	}
 	vars := mux.Vars(r)
-	url := "http://localhost:" + m[vars["serviceName"]] + "/" + vars["func"]
+	url := "http://svc-" + vars["serviceName"] + ":8080/" + vars["func"]
 
 	req, err := http.NewRequest("POST", url, r.Body)
 

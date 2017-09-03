@@ -24,8 +24,8 @@ func main() {
 	// Define our flags.
 	fs := flag.NewFlagSet("svc-add", flag.ExitOnError)
 	var (
-		httpAddr  = fs.String("http-addr", ":8081", "HTTP listen address")
-		debugAddr = fs.String("debug.addr", ":8082", "Debug and metrics listen address")
+		httpAddr  = fs.String("http-addr", ":8080", "HTTP listen address")
+		debugAddr = fs.String("debug.addr", ":8081", "Debug and metrics listen address")
 	)
 	fs.Usage = usageFor(fs, os.Args[0]+" [flags]")
 	fs.Parse(os.Args[1:])
