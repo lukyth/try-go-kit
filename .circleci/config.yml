@@ -15,6 +15,8 @@ jobs:
       - run: go test $(go list ./... | grep -v /vendor/)
   build-and-deploy:
     <<: *defaults
+    environment:
+      CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     steps:
       - checkout
       - run:
