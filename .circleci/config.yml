@@ -47,8 +47,8 @@ workflows:
     jobs:
       # - unit-test
       - build-and-deploy:
-          requires:
-            - unit-test
+          # requires:
+          #   - unit-test
           filters:
             branches:
               only:
