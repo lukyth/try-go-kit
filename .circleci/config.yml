@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: /go/src/github.com/pNagi/go-circleci-docker-kube
+    working_directory: /go/src/github.com/lukyth/try-go-kit
     docker:
       - image: circleci/golang:1.9
     environment:
