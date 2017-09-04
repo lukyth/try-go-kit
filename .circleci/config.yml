@@ -5,82 +5,48 @@ defaults: &defaults
     
 version: 2
 jobs:
+  install-dep:
+    <<: *defaults
+    steps:
+      - run: go get -u github.com/golang/dep/cmd/dep
+      - persist_to_workspace:
+          root: .
+          paths: go/
   install-dependencies-gateway:
     <<: *defaults
     steps:
       - checkout
-      - attach_workspace:
-          at: /go/src/github.com/lukyth/try-go-kit/gateway
-      - run:
-          name: Install dependencies
-          command: |
-            go get -u github.com/golang/dep/cmd/dep
-            cd gateway && dep ensure
+      - run: cd gateway && dep ensure
       - persist_to_workspace:
-          root: gateway
+          root: /go/src/github.com/lukyth/try-go-kit/gateway
           paths: vendor/
   install-dependencies-svc-add:
     <<: *defaults
     steps:
       - checkout
-      - attach_workspace:
-          at: /go/src/github.com/lukyth/try-go-kit/svc-add
-      - run:
-          name: Install dependencies
-          command: |
-            go get -u github.com/golang/dep/cmd/dep
-            cd svc-add && dep ensure
+      - run: cd svc-add && dep ensure
       - persist_to_workspace:
-          root: svc-add
+          root: /go/src/github.com/lukyth/try-go-kit/svc-add
           paths: vendor/
   install-dependencies-svc-string:
     <<: *defaults
     steps:
       - checkout
-      - attach_workspace:
-          at: /go/src/github.com/lukyth/try-go-kit/svc-string
-      - run:
-          name: Install dependencies
-          command: |
-            go get -u github.com/golang/dep/cmd/dep
-            cd svc-string && dep ensure
+      - run: cd svc-string && dep ensure
       - persist_to_workspace:
-          root: svc-string
+          root: /go/src/github.com/lukyth/try-go-kit/svc-string
           paths: vendor/
-  unit-test:
-    <<: *defaults
-    environment:
-      TEST_RESULTS: /tmp/test-results
-    steps: 
-      - checkout
-      - run: mkdir -p $TEST_RESULTS
-      - attach_workspace:
-          at: /go/src/github.com/lukyth/try-go-kit/gateway
-      - attach_workspace:
-          at: /go/src/github.com/lukyth/try-go-kit/svc-add
-      - attach_workspace:
-          at: /go/src/github.com/lukyth/try-go-kit/svc-string
-      - run: go get github.com/jstemmer/go-junit-report
-      - run:
-          name: Run unit tests
-          command: |
-            trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
-            make test | tee ${TEST_RESULTS}/go-test.out
-      - run: make
-      - store_artifacts:
-          path: /tmp/test-results
-          destination: raw-test-output
-      - store_test_results:
-          path: /tmp/test-results
 workflows:
   version: 2
   build_accept_deploy:
     jobs:
-      - install-dependencies-gateway
-      - install-dependencies-svc-add
-      - install-dependencies-svc-string
-      - unit-test:
+      - install-dep
+      - install-dependencies-gateway:
           requires:
-            - install-dependencies-gateway
-            - install-dependencies-svc-add
-            - install-dependencies-svc-string
+            - install-dep
+      - install-dependencies-svc-add:
+          requires:
+            - install-dep
+      - install-dependencies-svc-string:
+          requires:
+            - install-dep
