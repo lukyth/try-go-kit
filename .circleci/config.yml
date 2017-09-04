@@ -1,9 +1,12 @@
+defaults: &defaults
+  working_directory: /go/src/github.com/lukyth/try-go-kit/
+  docker:
+    - image: circleci/golang:1.9
+    
 version: 2
 jobs:
   install-dependencies-gateway:
-    working_directory: /go/src/github.com/lukyth/try-go-kit/
-    docker:
-      - image: circleci/golang:1.9
+    <<: *defaults
     steps:
       - checkout
       - attach_workspace:
@@ -17,9 +20,7 @@ jobs:
           root: gateway
           paths: vendor/
   install-dependencies-svc-add:
-    working_directory: /go/src/github.com/lukyth/try-go-kit/
-    docker:
-      - image: circleci/golang:1.9
+    <<: *defaults
     steps:
       - checkout
       - attach_workspace:
@@ -33,9 +34,7 @@ jobs:
           root: svc-add
           paths: vendor/
   install-dependencies-svc-string:
-    working_directory: /go/src/github.com/lukyth/try-go-kit/
-    docker:
-      - image: circleci/golang:1.9
+    <<: *defaults
     steps:
       - checkout
       - attach_workspace:
