@@ -31,6 +31,9 @@ jobs:
             echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
             ${HOME}/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
             ${HOME}/google-cloud-sdk/bin/gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${CLUSTER_ZONE} --project ${PROJECT_ID}
+      - run: cd gateway && docker build -f Dockerfile -t gcr.io/firsttry-178217/try-go-kit/gateway:$CIRCLE_SHA1 .
+      - run: cd svc-add && docker build -f Dockerfile -t gcr.io/firsttry-178217/try-go-kit/svc-add:$CIRCLE_SHA1 .
+      - run: cd svc-string && docker build -f Dockerfile -t gcr.io/firsttry-178217/try-go-kit/svc-string:$CIRCLE_SHA1 .
       - deploy:
           name: Deploy Master to GKE
           command: |
