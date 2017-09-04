@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build-gateway:
+  build:
     working_directory: /go/src/github.com/lukyth/try-go-kit/gateway
     docker:
       - image: circleci/golang:1.9
