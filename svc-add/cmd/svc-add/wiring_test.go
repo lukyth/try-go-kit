@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/metrics/discard"
 
 	"github.com/lukyth/try-go-kit/svc-add/pkg/endpoint"
 	"github.com/lukyth/try-go-kit/svc-add/pkg/service"
@@ -16,8 +15,8 @@ import (
 )
 
 func TestHTTP(t *testing.T) {
-	svc := service.New(log.NewNopLogger(), discard.NewCounter(), discard.NewCounter())
-	eps := endpoint.New(svc, log.NewNopLogger(), discard.NewHistogram())
+	svc := service.New(log.NewNopLogger())
+	eps := endpoint.New(svc, log.NewNopLogger())
 	mux := transport.NewHTTPHandler(eps, log.NewNopLogger())
 	srv := httptest.NewServer(mux)
 	defer srv.Close()
