@@ -1,7 +1,7 @@
 version: 2
 jobs:
-  build:
-    working_directory: /go/src/github.com/lukyth/try-go-kit
+  build-gateway:
+    working_directory: /go/src/github.com/lukyth/try-go-kit/gateway
     docker:
       - image: circleci/golang:1.9
     environment:
@@ -12,7 +12,11 @@ jobs:
       - setup_remote_docker
       - run: mkdir -p $TEST_RESULTS
       - run: go get github.com/jstemmer/go-junit-report
-      - run: go get ./
+      - run:
+          name: Install dependencies
+          command: |
+            go get -u github.com/golang/dep/cmd/dep
+            dep ensure
       - run:
           name: Run unit tests
           command: |
