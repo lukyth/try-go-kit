@@ -6,8 +6,6 @@ version: 2
 jobs:
   unit-test:
     <<: *defaults
-    environment:
-      TEST_RESULTS: /tmp/test-results
     steps:
       - checkout
       - run: mkdir -p $TEST_RESULTS
@@ -16,12 +14,6 @@ jobs:
       - run: cd svc-add && dep ensure
       - run: cd svc-string && dep ensure
       - run: go test $(go list ./... | grep -v /vendor/)
-      - run: make
-      - store_artifacts:
-          path: /tmp/test-results
-          destination: raw-test-output
-      - store_test_results:
-          path: /tmp/test-results
 workflows:
   version: 2
   build_accept_deploy:
