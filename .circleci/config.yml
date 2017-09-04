@@ -42,5 +42,6 @@ workflows:
             - unit-test
           filters:
             branches:
-              - master
-              - feature/circleci
+              only:
+                - master
+                - feature/circleci
