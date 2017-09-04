@@ -2,52 +2,33 @@ defaults: &defaults
   working_directory: /go/src/github.com/lukyth/try-go-kit/
   docker:
     - image: circleci/golang:1.9
-
 version: 2
 jobs:
-  install-dep:
+  unit-test:
     <<: *defaults
-    working_directory: /go
+    environment:
+      TEST_RESULTS: /tmp/test-results
     steps:
+      - checkout
+      - run: mkdir -p $TEST_RESULTS
       - run: go get -u github.com/golang/dep/cmd/dep
-      - persist_to_workspace:
-          root: .
-          paths: go/
-  install-dependencies-gateway:
-    <<: *defaults
-    steps:
-      - checkout
       - run: cd gateway && dep ensure
-      - persist_to_workspace:
-          root: /go/src/github.com/lukyth/try-go-kit/gateway
-          paths: vendor/
-  install-dependencies-svc-add:
-    <<: *defaults
-    steps:
-      - checkout
       - run: cd svc-add && dep ensure
-      - persist_to_workspace:
-          root: /go/src/github.com/lukyth/try-go-kit/svc-add
-          paths: vendor/
-  install-dependencies-svc-string:
-    <<: *defaults
-    steps:
-      - checkout
       - run: cd svc-string && dep ensure
-      - persist_to_workspace:
-          root: /go/src/github.com/lukyth/try-go-kit/svc-string
-          paths: vendor/
+      - run: go get github.com/jstemmer/go-junit-report
+      - run:
+          name: Run unit tests
+          command: |
+            trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
+            make test | tee ${TEST_RESULTS}/go-test.out
+      - run: make
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: raw-test-output
+      - store_test_results:
+          path: /tmp/test-results
 workflows:
   version: 2
   build_accept_deploy:
     jobs:
-      - install-dep
-      - install-dependencies-gateway:
-          requires:
-            - install-dep
-      - install-dependencies-svc-add:
-          requires:
-            - install-dep
-      - install-dependencies-svc-string:
-          requires:
-            - install-dep
+      - unit-test
