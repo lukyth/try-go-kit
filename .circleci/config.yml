@@ -80,7 +80,7 @@ workflows:
       - install-dependencies-svc-add
       - install-dependencies-svc-string
       - unit-test:
-        requires:
-          - install-dependencies-gateway
-          - install-dependencies-svc-add
-          - install-dependencies-svc-string
+          requires:
+            - install-dependencies-gateway
+            - install-dependencies-svc-add
+            - install-dependencies-svc-string
