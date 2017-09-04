@@ -14,7 +14,7 @@ jobs:
   build-and-deploy:
     working_directory: /go/src/github.com/lukyth/try-go-kit/
     docker:
-      - image: docker
+      - image: circleci/golang:1.9 # will change soon
     environment:
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     steps:
