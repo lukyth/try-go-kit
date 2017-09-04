@@ -25,6 +25,6 @@ workflows:
   build_accept_deploy:
     jobs:
       - checkout
-      - install-dependencies-gateway
+      - install-dependencies-gateway:
         requires:
           - checkout
