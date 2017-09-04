@@ -1,31 +1,35 @@
 version: 2
 jobs:
-  build:
+  unit-test-gateway:
     working_directory: /go/src/github.com/lukyth/try-go-kit/
     docker:
       - image: circleci/golang:1.9
     environment:
-      TEST_RESULTS: /tmp/test-results
+      TEST_RESULTS: /gateway/tmp/test-results
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     steps:
       - checkout
       - setup_remote_docker
-      - run: cd gateway
       - run: mkdir -p $TEST_RESULTS
       - run: go get github.com/jstemmer/go-junit-report
       - run:
           name: Install dependencies
           command: |
             go get -u github.com/golang/dep/cmd/dep
-            dep ensure
+            cd gateway && dep ensure
       - run:
           name: Run unit tests
           command: |
-            trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
-            make test | tee ${TEST_RESULTS}/go-test.out
+            cd gateway && trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
+            cd gateway && make test | tee ${TEST_RESULTS}/go-test.out
       - run: make
       - store_artifacts:
-          path: /tmp/test-results
+          path: ${TEST_RESULTS}
           destination: raw-test-output
       - store_test_results:
-          path: /tmp/test-results
+          path: ${TEST_RESULTS}
+workflows:
+  version: 2
+  build_accept_deploy:
+    jobs:
+      - unit-test-gateway
