@@ -31,9 +31,7 @@ jobs:
       - deploy:
           name: Deploy Master to GKE
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              ./deploy.sh gateway
-            fi
+            ./deploy.sh gateway
 workflows:
   version: 2
   build_accept_deploy:
@@ -41,4 +39,8 @@ workflows:
       - unit-test
       - build-and-deploy:
           requires:
-            unit-test
+            - unit-test
+          filters:
+            branches:
+              - master
+              - feature/circleci
