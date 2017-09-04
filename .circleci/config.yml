@@ -8,7 +8,6 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - run: mkdir -p $TEST_RESULTS
       - run: go get -u github.com/golang/dep/cmd/dep
       - run: cd gateway && dep ensure
       - run: cd svc-add && dep ensure
