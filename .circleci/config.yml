@@ -2,11 +2,12 @@ defaults: &defaults
   working_directory: /go/src/github.com/lukyth/try-go-kit/
   docker:
     - image: circleci/golang:1.9
-    
+
 version: 2
 jobs:
   install-dep:
     <<: *defaults
+    working_directory: /go
     steps:
       - run: go get -u github.com/golang/dep/cmd/dep
       - persist_to_workspace:
