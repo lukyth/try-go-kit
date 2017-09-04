@@ -1,30 +1,26 @@
-defaults: &defaults
-  working_directory: /go/src/github.com/lukyth/try-go-kit/
-  docker:
-    - image: circleci/golang:1.9
-  environment:
-    TEST_RESULTS: /gateway/tmp/test-results
-    CLOUDSDK_CORE_DISABLE_PROMPTS: 1
 version: 2
 jobs:
-  checkout:
-    <<: *defaults
+  install-dependencies-gateway:
+    working_directory: /go/src/github.com/lukyth/try-go-kit/
+    docker:
+      - image: circleci/golang:1.9
+    environment:
+      TEST_RESULTS: /gateway/tmp/test-results
+      CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     steps:
       - checkout
-      - setup_remote_docker
-  install-dependencies-gateway:
-    <<: *defaults
-    steps:
+      - attach_workspace:
+          at: /go/src/github.com/lukyth/try-go-kit/gateway
       - run:
           name: Install dependencies
           command: |
             go get -u github.com/golang/dep/cmd/dep
             cd gateway && dep ensure
+      - persist_to_workspace:
+        root: /gateway
+        paths: vendor/
 workflows:
   version: 2
   build_accept_deploy:
     jobs:
-      - checkout
-      - install-dependencies-gateway:
-        requires:
-          - checkout
+      - install-dependencies-gateway
