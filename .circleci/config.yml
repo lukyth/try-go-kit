@@ -13,8 +13,32 @@ jobs:
       - run: cd svc-add && dep ensure
       - run: cd svc-string && dep ensure
       - run: go test $(go list ./... | grep -v /vendor/)
+  build-and-deploy:
+    <<: *defaults
+    steps:
+      - checkout
+      - run:
+          name: Install gcloud
+          command: |
+            curl https://sdk.cloud.google.com | bash
+            ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
+      - run:
+          name: Auth gcloud
+          command: |
+            echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
+            ${HOME}/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            ${HOME}/google-cloud-sdk/bin/gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${CLUSTER_ZONE} --project ${PROJECT_ID}
+      - deploy:
+          name: Deploy Master to GKE
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              ./deploy.sh gateway
+            fi
 workflows:
   version: 2
   build_accept_deploy:
     jobs:
       - unit-test
+      - build-and-deploy:
+          requires:
+            unit-test
