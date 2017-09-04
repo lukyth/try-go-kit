@@ -14,7 +14,7 @@ jobs:
   build-and-deploy:
     working_directory: /go/src/github.com/lukyth/try-go-kit/
     docker:
-      - image: google/cloud-sdk
+      - image: remie/circleci-docker-gcloud
     environment:
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     steps:
