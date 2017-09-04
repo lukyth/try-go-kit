@@ -14,12 +14,13 @@ jobs:
   build-and-deploy:
     working_directory: /go/src/github.com/lukyth/try-go-kit/
     docker:
-      - image: circleci/golang:1.9 # will change soon
+      - image: circleci/golang # will change soon
     environment:
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 17.06.1-ce
       - run:
           name: Install gcloud
           command: |
@@ -44,7 +45,7 @@ workflows:
   version: 2
   build_accept_deploy:
     jobs:
-      - unit-test
+      # - unit-test
       - build-and-deploy:
           requires:
             - unit-test
