@@ -7,9 +7,9 @@ jobs:
     steps:
       - checkout
       - run: go get -u github.com/golang/dep/cmd/dep
-      - run: cd gateway && dep ensure
-      - run: cd svc-add && dep ensure
-      - run: cd svc-string && dep ensure
+      - run: cd gateway && dep ensure -vendor-only
+      - run: cd svc-add && dep ensure -vendor-only
+      - run: cd svc-string && dep ensure -vendor-only
       - run: go test $(go list ./... | grep -v /vendor/)
   build-and-deploy:
     working_directory: /go/src/github.com/lukyth/try-go-kit/
