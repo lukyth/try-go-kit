@@ -27,6 +27,13 @@ jobs:
             curl https://sdk.cloud.google.com | bash
             ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
       - run:
+          name: Update gcloud SDK
+          command: ${HOME}/google-cloud-sdk/bin/gcloud components update -q
+      - save_cache:
+          key: gcloud-latest-{{ .Branch }}-{{ checksum "VERSION_FILE" }}
+          paths:
+            - "${HOME}/google-cloud-sdk"
+      - run:
           name: Auth gcloud
           command: |
             echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
