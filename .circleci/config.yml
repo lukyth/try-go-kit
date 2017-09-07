@@ -35,7 +35,7 @@ jobs:
       - save_cache:
           key: gcloud-latest
           paths:
-            - "${HOME}/google-cloud-sdk"
+            - "./$HOME/google-cloud-sdk"
       - run:
           name: Auth gcloud
           command: |
