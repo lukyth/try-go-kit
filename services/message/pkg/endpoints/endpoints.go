@@ -3,37 +3,51 @@ package endpoints
 import (
 	"context"
 
+	"github.com/go-kit/kit/endpoint"
+
 	"github.com/lukyth/try-go-kit/services/message/pkg/service"
 )
 
-// Endpoints collects all of the endpoints that compose an add service. It's
+// Endpoints collects all of the endpoints that compose a message service. It's
 // meant to be used as a helper struct, to collect all of the endpoints into a
 // single parameter.
-
 type Endpoints struct {
 	GetMessagesEndpoint endpoint.Endpoint
 	GetMessageEndpoint  endpoint.Endpoint
 	PostMessageEndpoint endpoint.Endpoint
 }
+
+// GetMessagesRequest collects the request parameters for the GetMessages method.
 type GetMessagesRequest struct{}
+
+// GetMessagesResponse collects the response values for the GetMessages method.
 type GetMessagesResponse struct {
-	M0 []Message
+	M0 []service.Message
 	E1 error
 }
+
+// GetMessageRequest collects the request parameters for the GetMessage method.
 type GetMessageRequest struct {
 	MID string
 }
+
+// GetMessageResponse collects the response values for the GetMessage method.
 type GetMessageResponse struct {
-	M0 Message
+	M0 service.Message
 	E1 error
 }
+
+// PostMessageRequest collects the request parameters for the PostMessage method.
 type PostMessageRequest struct {
-	M Message
+	M service.Message
 }
+
+// PostMessageResponse collects the response values for the PostMessage method.
 type PostMessageResponse struct {
 	E0 error
 }
 
+// New return all endpoints.
 func New(svc service.MessageService) (ep Endpoints) {
 	ep.GetMessagesEndpoint = MakeGetMessagesEndpoint(svc)
 	ep.GetMessageEndpoint = MakeGetMessageEndpoint(svc)

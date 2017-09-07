@@ -18,24 +18,38 @@ type Message struct {
 
 type stubMessageService struct{}
 
-// Get a new instance of the service.
+// New return a new instance of the service.
 // If you want to add service middleware this is the place to put them.
-func New() (s *stubMessageService) {
+func New() (s MessageService) {
 	s = &stubMessageService{}
 	return s
 }
 
 // Implement the business logic of GetMessages
-func (me *stubMessageService) GetMessages(ctx context.Context) (M0 []Message, e1 error) {
-	return M0, e1
+func (s *stubMessageService) GetMessages(ctx context.Context) (ms []Message, e error) {
+	ms = []Message{
+		Message{
+			ID:   "1",
+			Body: "first message",
+		},
+		Message{
+			ID:   "2",
+			Body: "second message",
+		},
+	}
+	return ms, nil
 }
 
 // Implement the business logic of GetMessage
-func (me *stubMessageService) GetMessage(ctx context.Context, mID string) (M0 Message, e1 error) {
-	return M0, e1
+func (s *stubMessageService) GetMessage(ctx context.Context, mID string) (m Message, e error) {
+	m = Message{
+		ID:   "1",
+		Body: "first message",
+	}
+	return m, nil
 }
 
 // Implement the business logic of PostMessage
-func (me *stubMessageService) PostMessage(ctx context.Context, m Message) (e0 error) {
-	return e0
+func (s *stubMessageService) PostMessage(ctx context.Context, m Message) (e error) {
+	return nil
 }

@@ -15,5 +15,7 @@ dep ensure
 ./bin/message
 ```
 ```bash
-curl localhost:8080
+curl -X POST -d '{}' localhost:8080/get_messages
+curl -X POST -d '{}' localhost:8080/get_message
+curl -X POST -d '{}' localhost:8080/post_message
 ```
