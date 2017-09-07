@@ -35,7 +35,7 @@ jobs:
       - save_cache:
           key: gcloud-latest-{{ checksum "~/home/circleci/google-cloud-sdk/VERSION" }}
           paths:
-            - "~/home/circleci/google-cloud-sdk"
+            - "~/google-cloud-sdk"
       - run:
           name: Auth gcloud
           command: |
