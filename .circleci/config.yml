@@ -22,10 +22,10 @@ jobs:
       - setup_remote_docker:
           version: 17.06.1-ce
       - run:
-        name: Install gcloud
-        command: |
-          curl https://sdk.cloud.google.com | bash
-          ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
+          name: Install gcloud
+          command: |
+            curl https://sdk.cloud.google.com | bash
+            ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
       - run:
           name: Auth gcloud
           command: |
