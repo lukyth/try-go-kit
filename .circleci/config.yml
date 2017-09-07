@@ -23,7 +23,7 @@ jobs:
           version: 17.06.1-ce
       - restore_cache:
           keys:
-            - gcloud-latest-{{ checksum "VERSION" }}
+            - gcloud-latest-{{ checksum "${HOME}/google-cloud-sdk/VERSION" }}
             - gcloud-latest-
       - run:
           name: Install gcloud if cache doesn't exist
@@ -35,7 +35,7 @@ jobs:
           name: Update gcloud SDK
           command: ${HOME}/google-cloud-sdk/bin/gcloud components update -q
       - save_cache:
-          key: gcloud-latest-{{ checksum "VERSION" }}
+          key: gcloud-latest-{{ checksum "${HOME}/google-cloud-sdk/VERSION" }}
           paths:
             - "${HOME}/google-cloud-sdk"
       - run:
