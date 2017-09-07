@@ -21,11 +21,8 @@ jobs:
       - checkout
       - setup_remote_docker:
           version: 17.06.1-ce
-      - run:
-          name: Install gcloud
-          command: |
-            curl https://sdk.cloud.google.com | bash
-            ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
+      - restore_cache:
+          key: gcloud-latest-{{ .Branch }}
       - run:
           name: Update gcloud SDK
           command: ${HOME}/google-cloud-sdk/bin/gcloud components update -q
