@@ -16,7 +16,7 @@
 [[projects]]
   branch = "master"
   name = "github.com/go-kit/kit"
-  packages = ["circuitbreaker","endpoint","log","metrics","metrics/discard","metrics/internal/lv","metrics/prometheus","ratelimit","transport/http"]
+  packages = ["circuitbreaker","endpoint","log","metrics","metrics/internal/lv","metrics/prometheus","ratelimit","transport/http"]
   revision = "f01651a61ac759c6b508539bddda24f63ea34bbb"
 
 [[projects]]
@@ -100,6 +100,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "acaa7a39574d204e78b4ed0dabed4a6c975d4f104299f14ca9e8f6563ebf8c62"
+  inputs-digest = "149591b7a87b23651b1690c74736b2b556e3bd91a285cc83a24e83dbf8f81bef"
   solver-name = "gps-cdcl"
   solver-version = 1
