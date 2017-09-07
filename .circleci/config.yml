@@ -18,21 +18,19 @@ jobs:
     environment:
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     steps:
-      # - checkout
-      # - setup_remote_docker:
-          # version: 17.06.1-ce
+      - checkout
+      - setup_remote_docker:
+          version: 17.06.1-ce
       - restore_cache:
           key: gcloud-latest-
       - run:
           name: Install or Update gcloud
           command: |
             if [ ! -f ${HOME}/google-cloud-sdk/bin/gcloud ]; then
-              echo "Install"
               curl https://sdk.cloud.google.com | bash
               ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
             else
               ${HOME}/google-cloud-sdk/bin/gcloud components update -q
-              echo "Updated"
             fi
       - save_cache:
           key: gcloud-latest-{{ checksum "~/google-cloud-sdk/VERSION" }}
@@ -41,23 +39,23 @@ jobs:
       - run:
           name: Auth gcloud
           command: |
-            # echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
-            # ${HOME}/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-            # ${HOME}/google-cloud-sdk/bin/gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${CLUSTER_ZONE} --project ${PROJECT_ID}
+            echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
+            ${HOME}/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            ${HOME}/google-cloud-sdk/bin/gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${CLUSTER_ZONE} --project ${PROJECT_ID}
       - deploy:
           name: Deploy Master to GKE
           command: |
-            # ./deploy.sh gateway
-            # ./deploy.sh svc-add
-            # ./deploy.sh svc-string
+            ./deploy.sh gateway
+            ./deploy.sh svc-add
+            ./deploy.sh svc-string
 workflows:
   version: 2
   build_accept_deploy:
     jobs:
-      # - unit-test
+      - unit-test
       - build-and-deploy:
-          # requires:
-          #   - unit-test
+          requires:
+            - unit-test
           filters:
             branches:
               only:
