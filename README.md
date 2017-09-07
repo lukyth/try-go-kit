@@ -13,6 +13,7 @@ brew install dep
 ```bash
 docker-compose up
 ```
+
 ```bash
 curl -XPOST -d'{"s":"hello, world"}' localhost:8000/string/count
 curl -XPOST -d'{"s":"hello, world"}' localhost:8000/string/uppercase

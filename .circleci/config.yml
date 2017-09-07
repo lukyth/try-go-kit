@@ -7,25 +7,35 @@ jobs:
     steps:
       - checkout
       - run: go get -u github.com/golang/dep/cmd/dep
-      - run: cd gateway && dep ensure
-      - run: cd svc-add && dep ensure
-      - run: cd svc-string && dep ensure
+      - run: cd gateway && dep ensure -vendor-only
+      - run: cd svc-add && dep ensure -vendor-only
+      - run: cd svc-string && dep ensure -vendor-only
       - run: go test $(go list ./... | grep -v /vendor/)
   build-and-deploy:
     working_directory: /go/src/github.com/lukyth/try-go-kit/
     docker:
-      - image: circleci/golang # will change soon
+      - image: circleci/golang # Plese find or create an image that contains docker and gcloud in order to make this job faster since installing gcloud takes time.
     environment:
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     steps:
       - checkout
       - setup_remote_docker:
           version: 17.06.1-ce
+      - restore_cache:
+          key: gcloud-latest-
       - run:
-          name: Install gcloud
+          name: Install or Update gcloud
           command: |
-            curl https://sdk.cloud.google.com | bash
-            ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
+            if [ ! -f ${HOME}/google-cloud-sdk/bin/gcloud ]; then
+              curl https://sdk.cloud.google.com | bash
+              ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
+            else
+              ${HOME}/google-cloud-sdk/bin/gcloud components update -q
+            fi
+      - save_cache:
+          key: gcloud-latest-{{ checksum "~/google-cloud-sdk/VERSION" }}
+          paths:
+            - "~/google-cloud-sdk"
       - run:
           name: Auth gcloud
           command: |
