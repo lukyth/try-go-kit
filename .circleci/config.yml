@@ -9,6 +9,7 @@ jobs:
       - run: go get -u github.com/golang/dep/cmd/dep
       - run: cd gateway && dep ensure -vendor-only
       - run: cd services/add && dep ensure -vendor-only
+      - run: cd services/message && dep ensure -vendor-only
       - run: cd services/string && dep ensure -vendor-only
       - run: go test $(go list ./... | grep -v /vendor/)
   build-and-deploy:
