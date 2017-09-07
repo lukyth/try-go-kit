@@ -22,7 +22,7 @@ jobs:
       - setup_remote_docker:
           version: 17.06.1-ce
       - restore_cache:
-          key: gcloud-latest-{{ .Branch }}
+          key: gcloud-latest
       - run:
           name: Install or Update gcloud
           command: |
@@ -33,7 +33,7 @@ jobs:
               ${HOME}/google-cloud-sdk/bin/gcloud components update -q
             fi
       - save_cache:
-          key: gcloud-latest-{{ .Branch }}-{{ checksum "VERSION" }}
+          key: gcloud-latest-{{ checksum "~/home/circleci/google-cloud-sdk/VERSION" }}
           paths:
             - "~/home/circleci/google-cloud-sdk"
       - run:
