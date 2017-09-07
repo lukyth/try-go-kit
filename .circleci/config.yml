@@ -22,12 +22,20 @@ jobs:
       - setup_remote_docker:
           version: 17.06.1-ce
       - restore_cache:
-          key: gcloud-latest-{{ .Branch }}
+          keys:
+            - gcloud-latest-{{ checksum "VERSION" }}
+            - gcloud-latest-
+      - run:
+          name: Install gcloud if cache doesn't exist
+          command: |
+            curl https://sdk.cloud.google.com | bash
+            ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
+          when: on_fail
       - run:
           name: Update gcloud SDK
           command: ${HOME}/google-cloud-sdk/bin/gcloud components update -q
       - save_cache:
-          key: gcloud-latest-{{ .Branch }}-{{ checksum "VERSION_FILE" }}
+          key: gcloud-latest-{{ checksum "VERSION" }}
           paths:
             - "${HOME}/google-cloud-sdk"
       - run:
