@@ -24,14 +24,14 @@ jobs:
       - restore_cache:
           key: gcloud-latest
       - run:
-          name: Install gcloud if cache doesn't exist
+          name: Install or Update gcloud
           command: |
-            curl https://sdk.cloud.google.com | bash
-            ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
-          when: on_fail
-      - run:
-          name: Update gcloud SDK
-          command: ${HOME}/google-cloud-sdk/bin/gcloud components update -q
+            if [ ! -f ${HOME}/google-cloud-sdk/bin/gcloud ]; then
+              curl https://sdk.cloud.google.com | bash
+              ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
+            else
+              ${HOME}/google-cloud-sdk/bin/gcloud components update -q
+            fi
       - save_cache:
           key: gcloud-latest
           paths:
