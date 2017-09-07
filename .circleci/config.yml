@@ -22,7 +22,7 @@ jobs:
       - setup_remote_docker:
           version: 17.06.1-ce
       - restore_cache:
-          key: gcloud-latest
+          key: gcloud-latest-
       - run:
           name: Install or Update gcloud
           command: |
@@ -33,7 +33,7 @@ jobs:
               ${HOME}/google-cloud-sdk/bin/gcloud components update -q
             fi
       - save_cache:
-          key: gcloud-latest
+          key: gcloud-latest-{{ epoch }}
           paths:
             - "./$HOME/google-cloud-sdk"
       - run:
