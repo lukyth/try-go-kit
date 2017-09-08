@@ -51,9 +51,9 @@ jobs:
       - deploy:
           name: Deploy Master to GKE
           command: |
-            ./deploy.sh gateway
-            ./deploy.sh add
-            ./deploy.sh string
+            ./deploy.sh gateway gateway
+            ./deploy.sh add services/add
+            ./deploy.sh string services/string
 workflows:
   version: 2
   build_accept_deploy:
