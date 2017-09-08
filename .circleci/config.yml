@@ -29,9 +29,9 @@ jobs:
             if [ ! -f ${HOME}/google-cloud-sdk/bin/gcloud ]; then
               apk --no-cache add \
                 curl \
-                # python \
+                python \
                 # py-crcmod \
-                bash \
+                bash
                 # libc6-compat \
                 # openssh-client \
                 # git \
