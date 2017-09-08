@@ -6,8 +6,8 @@ services:
     ports:
       - "8000:8000"
 
-  svc-add:
-    build: ./svc-add
+  add:
+    build: ./services/add
 
-  svc-string:
-    build: ./svc-string
+  string:
+    build: ./services/string
