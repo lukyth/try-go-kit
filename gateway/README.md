@@ -1,5 +1,5 @@
 ## Prerequisite
-svc-add and svc-string need to be ran first.
+Add Service and String Service need to be ran first.
 
 ## Usage
 See /README.md

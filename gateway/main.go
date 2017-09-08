@@ -22,7 +22,7 @@ func main() {
 
 func serviceHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	url := "http://svc-" + vars["serviceName"] + ":8080/" + vars["func"]
+	url := "http://" + vars["serviceName"] + "/" + vars["func"]
 
 	req, err := http.NewRequest("POST", url, r.Body)
 
