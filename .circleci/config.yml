@@ -28,13 +28,9 @@ jobs:
           command: |
             if [ ! -f ${HOME}/google-cloud-sdk/bin/gcloud ]; then
               apk --no-cache add \
+                bash \
                 curl \
                 python \
-                # py-crcmod \
-                bash
-                # libc6-compat \
-                # openssh-client \
-                # git \
               curl https://sdk.cloud.google.com | bash
               ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
             else
