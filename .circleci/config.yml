@@ -14,11 +14,12 @@ jobs:
   build-and-deploy:
     working_directory: /go/src/github.com/lukyth/try-go-kit/
     docker:
-      - image: circleci/golang # Plese find or create an image that contains docker and gcloud in order to make this job faster since installing gcloud takes time.
+      - image: docker
     environment:
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     steps:
       - checkout
+      - run: apk --no-cache add curl
       - setup_remote_docker:
           version: 17.06.1-ce
       - restore_cache:
