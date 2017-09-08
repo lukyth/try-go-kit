@@ -35,6 +35,7 @@ jobs:
               curl https://sdk.cloud.google.com | sh
               ~/google-cloud-sdk/bin/gcloud components install kubectl
             else
+              apk --no-cache add python
               ~/google-cloud-sdk/bin/gcloud components update -q
             fi
       - save_cache:
