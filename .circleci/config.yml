@@ -27,8 +27,15 @@ jobs:
           name: Install or Update gcloud
           command: |
             if [ ! -f ${HOME}/google-cloud-sdk/bin/gcloud ]; then
-              apk --no-cache add curl
-              curl https://sdk.cloud.google.com | ${BASH}
+              apk --no-cache add \
+                curl \
+                # python \
+                # py-crcmod \
+                bash \
+                # libc6-compat \
+                # openssh-client \
+                # git \
+              curl https://sdk.cloud.google.com | bash
               ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
             else
               ${HOME}/google-cloud-sdk/bin/gcloud components update -q
