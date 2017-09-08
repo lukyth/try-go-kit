@@ -23,12 +23,12 @@ jobs:
           version: 17.06.1-ce
       - restore_cache:
           key: gcloud-latest-
+      - run: apk --no-cache add bash
       - run:
           name: Install or Update gcloud
           command: |
             if [ ! -f ${HOME}/google-cloud-sdk/bin/gcloud ]; then
               apk --no-cache add \
-                bash \
                 curl \
                 python \
               curl https://sdk.cloud.google.com | bash
