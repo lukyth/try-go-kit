@@ -23,7 +23,6 @@ jobs:
           version: 17.06.1-ce
       - restore_cache:
           key: gcloud-latest-
-      - run: apk --no-cache add bash
       - run:
           name: Install or Update gcloud
           command: |
@@ -31,6 +30,7 @@ jobs:
               apk --no-cache add \
                 curl \
                 python \
+                bash
               curl https://sdk.cloud.google.com | sh
               ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
             else
