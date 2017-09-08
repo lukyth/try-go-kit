@@ -26,15 +26,15 @@ jobs:
       - run:
           name: Install or Update gcloud
           command: |
-            if [ ! -f ${HOME}/google-cloud-sdk/bin/gcloud ]; then
+            if [ ! -f ~/google-cloud-sdk/bin/gcloud ]; then
               apk --no-cache add \
                 curl \
                 python \
                 bash
               curl https://sdk.cloud.google.com | sh
-              ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
+              ~/google-cloud-sdk/bin/gcloud components install kubectl
             else
-              ${HOME}/google-cloud-sdk/bin/gcloud components update -q
+              ~/google-cloud-sdk/bin/gcloud components update -q
             fi
       - save_cache:
           key: gcloud-latest-{{ checksum "~/google-cloud-sdk/VERSION" }}
@@ -43,9 +43,9 @@ jobs:
       - run:
           name: Auth gcloud
           command: |
-            echo $GCLOUD_SERVICE_KEY | base64 -d > ${HOME}/gcloud-service-key.json
-            ${HOME}/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-            ${HOME}/google-cloud-sdk/bin/gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${CLUSTER_ZONE} --project ${PROJECT_ID}
+            echo $GCLOUD_SERVICE_KEY | base64 -d > ~/gcloud-service-key.json
+            ~/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=~/gcloud-service-key.json
+            ~/google-cloud-sdk/bin/gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${CLUSTER_ZONE} --project ${PROJECT_ID}
       - deploy:
           name: Deploy Master to GKE
           command: |
