@@ -19,7 +19,6 @@ jobs:
       CLOUDSDK_CORE_DISABLE_PROMPTS: 1
     steps:
       - checkout
-      - run: apk --no-cache add curl
       - setup_remote_docker:
           version: 17.06.1-ce
       - restore_cache:
@@ -28,7 +27,8 @@ jobs:
           name: Install or Update gcloud
           command: |
             if [ ! -f ${HOME}/google-cloud-sdk/bin/gcloud ]; then
-              curl https://sdk.cloud.google.com | bash
+              apk --no-cache add curl
+              curl https://sdk.cloud.google.com | ${BASH}
               ${HOME}/google-cloud-sdk/bin/gcloud components install kubectl
             else
               ${HOME}/google-cloud-sdk/bin/gcloud components update -q
