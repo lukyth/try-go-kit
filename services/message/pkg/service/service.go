@@ -1,6 +1,9 @@
 package service
 
-import "context"
+import (
+	"context"
+	"fmt"
+)
 
 // MessageService provides operations on messages.
 type MessageService interface {
@@ -43,13 +46,16 @@ func (s *stubMessageService) GetMessages(ctx context.Context) (ms []Message, e e
 // Implement the business logic of GetMessage
 func (s *stubMessageService) GetMessage(ctx context.Context, mID string) (m Message, e error) {
 	m = Message{
-		ID:   "1",
-		Body: "first message",
+		ID:   mID,
+		Body: mID + " message",
 	}
 	return m, nil
 }
 
 // Implement the business logic of PostMessage
 func (s *stubMessageService) PostMessage(ctx context.Context, m Message) (e error) {
+	fmt.Println(m.ID)
+	fmt.Println(m.Body)
+	fmt.Println("Saved")
 	return nil
 }

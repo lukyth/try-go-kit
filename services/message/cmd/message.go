@@ -11,8 +11,6 @@ import (
 	"github.com/lukyth/try-go-kit/services/message/pkg/service"
 )
 
-type httpHandler struct{}
-
 func main() {
 	logger := log.NewLogfmtLogger(os.Stderr)
 
