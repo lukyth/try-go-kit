@@ -1,8 +1,11 @@
 package service
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 )
 
 // MessageService provides operations on messages.
@@ -54,8 +57,21 @@ func (s *stubMessageService) GetMessage(ctx context.Context, mID string) (m Mess
 
 // Implement the business logic of PostMessage
 func (s *stubMessageService) PostMessage(ctx context.Context, m Message) (e error) {
+	url := "http://localhost:8081/count"
+
+	var jsonStr = []byte(fmt.Sprintf(`{"s":"%s"}`, m.Body))
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println(m.ID)
 	fmt.Println(m.Body)
-	fmt.Println("Saved")
+	fmt.Println("Message count: " + string(body))
 	return nil
 }
