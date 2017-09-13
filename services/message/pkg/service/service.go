@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -23,6 +24,12 @@ type Message struct {
 }
 
 type stubMessageService struct{}
+
+var (
+	ErrInconsistentIDs = errors.New("inconsistent IDs")
+	ErrAlreadyExists   = errors.New("already exists")
+	ErrNotFound        = errors.New("not found")
+)
 
 // New return a new instance of the service.
 // If you want to add service middleware this is the place to put them.
@@ -48,6 +55,9 @@ func (s *stubMessageService) GetMessages(ctx context.Context) (ms []Message, e e
 
 // Implement the business logic of GetMessage
 func (s *stubMessageService) GetMessage(ctx context.Context, mID string) (m Message, e error) {
+	if mID != "1" {
+		return Message{}, ErrNotFound
+	}
 	m = Message{
 		ID:   mID,
 		Body: mID + " message",

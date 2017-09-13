@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/lukyth/try-go-kit/services/message/pkg/endpoints"
+	"github.com/lukyth/try-go-kit/services/message/pkg/service"
 )
 
 // NewHTTPHandler returns a handler that makes a set of endpoints available on
@@ -19,17 +20,17 @@ func NewHTTPHandler(endpoints endpoints.Endpoints) http.Handler {
 	r.Methods("GET").Path("/messages").Handler(httptransport.NewServer(
 		endpoints.GetMessagesEndpoint,
 		DecodeGetMessagesRequest,
-		EncodeResponse,
+		encodeResponse,
 	))
 	r.Methods("GET").Path("/messages/{id}").Handler(httptransport.NewServer(
 		endpoints.GetMessageEndpoint,
 		DecodeGetMessageRequest,
-		EncodeResponse,
+		encodeResponse,
 	))
 	r.Methods("POST").Path("/messages").Handler(httptransport.NewServer(
 		endpoints.PostMessageEndpoint,
 		DecodePostMessageRequest,
-		EncodeResponse,
+		encodeResponse,
 	))
 	return r
 }
@@ -59,10 +60,48 @@ func DecodePostMessageRequest(_ context.Context, r *http.Request) (interface{}, 
 	return req, err
 }
 
-// EncodeResponse is a transport/http.EncodeResponseFunc that encodes
-// the response as JSON to the response writer. Primarily useful in a server.
-func EncodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
+// errorer is implemented by all concrete response types that may contain
+// errors. It allows us to change the HTTP response code without needing to
+// trigger an endpoint (transport-level) error.
+type errorer interface {
+	error() error
+}
+
+// encodeResponse is the common method to encode all response types to the
+// client. I chose to do it this way because, since we're using JSON, there's no
+// reason to provide anything more specific. It's certainly possible to
+// specialize on a per-response (per-method) basis.
+func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+	// TODO: Make this line work
+	e, ok := response.(errorer)
+	if ok && e.error() != nil {
+		// Not a Go kit transport error, but a business-logic error.
+		// Provide those as HTTP errors.
+		encodeError(ctx, e.error(), w)
+		return nil
+	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	err := json.NewEncoder(w).Encode(response)
-	return err
+	return json.NewEncoder(w).Encode(response)
+}
+
+func encodeError(_ context.Context, err error, w http.ResponseWriter) {
+	if err == nil {
+		panic("encodeError with nil error")
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(codeFrom(err))
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"error": err.Error(),
+	})
+}
+
+func codeFrom(err error) int {
+	switch err {
+	case service.ErrNotFound:
+		return http.StatusNotFound
+	case service.ErrAlreadyExists, service.ErrInconsistentIDs:
+		return http.StatusBadRequest
+	default:
+		return http.StatusInternalServerError
+	}
 }

@@ -33,9 +33,11 @@ type GetMessageRequest struct {
 
 // GetMessageResponse collects the response values for the GetMessage method.
 type GetMessageResponse struct {
-	M0 service.Message
-	E1 error
+	Message service.Message `json:"message,omitempty"`
+	Err     error           `json:"err,omitempty"`
 }
+
+func (r GetMessageResponse) error() error { return r.Err }
 
 // PostMessageRequest collects the request parameters for the PostMessage method.
 type PostMessageRequest struct {
@@ -49,10 +51,11 @@ type PostMessageResponse struct {
 
 // New return all endpoints.
 func New(svc service.MessageService) (ep Endpoints) {
-	ep.GetMessagesEndpoint = MakeGetMessagesEndpoint(svc)
-	ep.GetMessageEndpoint = MakeGetMessageEndpoint(svc)
-	ep.PostMessageEndpoint = MakePostMessageEndpoint(svc)
-	return ep
+	return Endpoints{
+		GetMessagesEndpoint: MakeGetMessagesEndpoint(svc),
+		GetMessageEndpoint:  MakeGetMessageEndpoint(svc),
+		PostMessageEndpoint: MakePostMessageEndpoint(svc),
+	}
 }
 
 // MakeGetMessagesEndpoint returns an endpoint that invokes GetMessages on the service.
@@ -67,10 +70,10 @@ func MakeGetMessagesEndpoint(svc service.MessageService) (ep endpoint.Endpoint) 
 // MakeGetMessageEndpoint returns an endpoint that invokes GetMessage on the service.
 // Primarily useful in a server.
 func MakeGetMessageEndpoint(svc service.MessageService) (ep endpoint.Endpoint) {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
 		req := request.(GetMessageRequest)
-		M0, e1 := svc.GetMessage(ctx, req.MID)
-		return GetMessageResponse{M0: M0, E1: e1}, nil
+		m, e := svc.GetMessage(ctx, req.MID)
+		return GetMessageResponse{Message: m, Err: e}, nil
 	}
 }
 
